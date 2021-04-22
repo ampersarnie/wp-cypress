@@ -8,8 +8,9 @@ use WP_Cypress\Seeder\SeedCommand;
 
 class Plugin {
 	public function __construct() {
-		add_action( 'init', [ $this, 'add_seed_command' ], 1 );
-		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_assets' ], 1 );
+		add_action( 'init', array( $this, 'add_seed_command' ), 1 );
+		add_action( 'init', array( $this, 'add_boot_command' ), 1 );
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_assets' ), 1 );
 
 		$this->add_user_command();
 	}
@@ -23,7 +24,7 @@ class Plugin {
 		wp_enqueue_script(
 			'wp-cypress-disable-tooltips',
 			plugins_url( '/assets/disable-tooltips.js', __DIR__ ),
-			[ 'wp-blocks' ],
+			array( 'wp-blocks' ),
 			filemtime( WP_CYPRESS_PLUGIN . '/assets/disable-tooltips.js' ),
 			false
 		);
@@ -43,6 +44,19 @@ class Plugin {
 	}
 
 	/**
+	 * Add the boot command to be executed by the WP CLI.
+	 *
+	 * @return void
+	 */
+	public function add_boot_command(): void {
+		if ( ! class_exists( 'WP_CLI' ) ) {
+			return;
+		}
+
+		WP_CLI::add_command( 'boot', BootCommand::class );
+	}
+
+	/**
 	 * Add command to set which user should be set when bypassing auth.
 	 *
 	 * @return void
@@ -52,7 +66,7 @@ class Plugin {
 			return;
 		}
 
-		WP_CLI::add_command( 'wp-cypress-set-user', [ $this, 'set_user' ] );
+		WP_CLI::add_command( 'wp-cypress-set-user', array( $this, 'set_user' ) );
 	}
 
 	/**
@@ -71,7 +85,7 @@ class Plugin {
 				WP_CLI::error( "User {$args[0]} doesn't exits." );
 				return;
 			}
-	
+
 			$user_id = $user->ID;
 		}
 
