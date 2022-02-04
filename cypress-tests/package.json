@@ -1,0 +1,8 @@
+{
+  "name": "wp-cypress-tests",
+  "description": "Self tests for WP-Cypress functionality in WordPress and Cypress.",
+  "devDependencies": {
+    "@bigbite/wp-cypress": "file:..",
+    "cypress": "^9.3.1"
+  }
+}

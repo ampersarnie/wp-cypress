@@ -1,0 +1,9 @@
+{
+  "wp": {
+    "version": ["5.7", "5.8"],
+    "themes": [],
+    "plugins": [],
+    "port": 8181,
+    "dbPort": 6033
+  }
+}
